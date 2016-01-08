@@ -1,0 +1,20 @@
+\NeedsTeXFormat{pLaTeX2e}
+\ProvidesPackage{uppgfmark}[2016/01/07 v0.1 for pgfmark with uplatex-dvips]
+
+\@ifpackageloaded{pgfcore}{}{\PackageError{uppgfmark}{Package 'pgfcore' must be loaded}\@ehc}
+
+\def\pgfsys@markposition#1{%
+  \pdfsavepos%
+  \edef\pgf@temp{#1}%
+  \expandafter\pgfutil@writetoaux\expandafter{%
+    \expandafter\noexpand\expandafter\pgfsyspdfmark\expandafter{\pgf@temp}{\the\pdflastxpos}{\the\pdflastypos}}%
+}
+\def\pgfsyspdfmark#1#2#3{%
+  \expandafter\gdef\csname pgf@sys@pdf@mark@pos@#1\endcsname{\pgfqpoint{#2sp}{#3sp}}%
+}
+\def\pgfsys@getposition#1#2{%
+  \edef\pgf@marshal{\let\noexpand#2=\expandafter\noexpand\csname pgf@sys@pdf@mark@pos@#1\endcsname}%
+  \pgf@marshal%
+}
+\def\pgf@sys@pdf@mark@pos@pgfpageorigin{\pgfpointorigin}
+\endinput
